@@ -6,7 +6,7 @@ import FormProducto from "./componentes/productos/FormProductos";
 import Variables from "./componentes/general/Variables";
 import ListaProductos from "./componentes/productos/ListaProductos";
 import FormEdicionCategoria from "./componentes/categorias/FormEdicionCategoria";
-
+// Camilo
 const App = () => {
   return (
     <div>
