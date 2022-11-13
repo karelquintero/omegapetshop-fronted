@@ -1,25 +1,30 @@
 import axios from "axios";
+const URI = "https://kecco-tienda-api.herokuapp.com/";
 
-const categoriaServicios = {};
+const CategoriaServicios = {};
 
-categoriaServicios.listarCategorias = () => {
-    return axios.get("http://localhost:8000/api/categorias");
+CategoriaServicios.listarCategorias = () => {
+    return axios.get(URI+"api/categorias");
 }
 
-categoriaServicios.buscarCategorias = (busqueda) => {
-    return axios.get("http://localhost:8000/api/categorias?q="+busqueda);
+CategoriaServicios.buscarCategorias = (busqueda) => {
+    return axios.get(URI+"api/categorias?q="+busqueda);
 }
 
-categoriaServicios.cargarCategoria = (id) => {
-    return axios.get("http://localhost:8000/api/categorias/"+id);
+CategoriaServicios.cargarCategoria = (id) => {
+    return axios.get(URI+"api/categorias/"+id);
 }
 
-categoriaServicios.modificarCategoria = (id, body) => {
-    return axios.put("http://localhost:8000/api/categorias/"+id, body);
+CategoriaServicios.modificarCategoria = (id, body) => {
+    return axios.put(URI+"api/categorias/"+id, body);
 }
 
-categoriaServicios.guardarCategorias = (categoria) => {
-    return axios.post("http://localhost:8000/api/categorias", categoria);
+CategoriaServicios.guardarCategorias = (categoria) => {
+    return axios.post(URI+"api/categorias", categoria);
 }
 
-export default categoriaServicios;
+CategoriaServicios.borrarCategoria = (id) => {
+    return axios.delete(URI+"api/categorias/"+id);
+}
+
+export default CategoriaServicios;
