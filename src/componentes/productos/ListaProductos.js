@@ -37,6 +37,9 @@ const ListaProductos = () => {
                             <th>Nombre</th>
                             <th>Marca</th>
                             <th>Precio</th>
+                            <th>Categorias</th>
+                            <th>Imagen</th>
+                            <th>Caracteristicas</th>
                             <th>Disponible</th>
                             <th>Acciones</th>
                         </tr>
@@ -61,6 +64,9 @@ const ListaProductos = () => {
                                         <td>{producto.nombre}</td>
                                         <td>{producto.marca}</td>
                                         <td>{producto.precio}</td>
+                                        <td>{producto.categorias}</td>
+                                        <td>{producto.imagen}</td>
+                                        <td>{producto.caracteristicas}</td>
                                         <td>{producto.disp ? "Sí" : "No"}</td>
                                         <td>
                                             <a href={"/productos/form/"+producto._id} className="btn btn-sm btn-success me-2">Editar</a>

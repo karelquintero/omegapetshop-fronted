@@ -1,48 +1,84 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Estados from "../../enums/Estados";
 import CategoriaServicios from "../../servicios/categoriaServicios";
 import ProductoServicios from "../../servicios/ProductoServicios";
 
 const FormProducto = () => { 
 
     const navigateTo = useNavigate();
+    const { id } = useParams();
+    const [ estado, setEstado ] = useState(Estados.LISTO);
     const [ nombre, setNombre ] = useState("");
     const [ marca, setMarca ] = useState("");
     const [ precio, setPrecio ] = useState(0);
     const [ categoria, setCategoria ] = useState("");
     const [ imagen, setImagen ] = useState("");
+    const [ caracteristicas, setCaracteristicas ] = useState("");
     const [ disp, setDisp ] = useState(false);
-    const [ listaCategorias, setListaCategorias ] = useState([]);
+    const [ listaCategorias, setTablaCategorias ] = useState([]);
 
-    const cargarCategorias = async () => {
-        try {
-            const respuesta = await CategoriaServicios.listarCategorias();
-            setListaCategorias(respuesta.data);
-        } catch (error) {
-            console.log(error);
+    const cargarProducto = async() => {
+        if (id!=null) {
+            try {
+                const respuesta = await ProductoServicios.cargarProducto(id);
+                if (respuesta.data != null) {
+                    setNombre(respuesta.data.nombre);
+                    setMarca(respuesta.data.marca);
+                    setPrecio(respuesta.data.precio);
+                    setCategoria(respuesta.data.categorias);
+                    setImagen(respuesta.data.imagen);
+                    setCaracteristicas(respuesta.data.caracteristicas);
+                    setDisp(respuesta.data.disp);
+                }
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
-    useEffect(()=> {
-        cargarCategorias();
-    }, [])
-
+    const cargarListaCategorias = async () => {
+		setEstado(Estados.CARGANDO);
+		try {
+			const resultado = await CategoriaServicios.listarCategorias();
+			if (resultado.data.length === 0) {
+				setEstado(Estados.VACIO);
+			}
+			else {
+				setTablaCategorias(resultado.data);
+				setEstado(Estados.OK)
+			}
+		} catch (error) {
+			setEstado(Estados.ERROR);
+			console.log(error);
+		}
+	}
     const guardarProducto = async (event) => {
         event.preventDefault();
-        try {
+        if (categoria.length === 0) {
+            throw new Error("No hay categorías disponibles");
+        }
             const producto = {
                 nombre: nombre,
                 marca: marca,
                 precio: parseInt(precio),
-                categorias: [ categoria ],
+                categorias: categoria,
                 imagen :imagen,
+                caracteristicas : caracteristicas,
                 disp :disp
             }
-            const respuesta = await ProductoServicios.guardarProducto(producto);
+            console.log(producto);
+        try {
+            if (id==null) {
+                await ProductoServicios.guardarProducto(producto);
+            }
+            else {
+                await ProductoServicios.modificarProducto(id, producto);
+            }
             navigateTo("/productos");
         } catch (error) {
-        
+            console.log(error);
         }
     }
 
@@ -59,17 +95,24 @@ const FormProducto = () => {
     }
 
     const cambiarCategoria = (event) => {
-        setCategoria(event.target.value);
+        var options = Array.from(event.target.selectedOptions, option => option.value);
+        setCategoria(options);
     }
 
     const cambiarImagen = (event) => {
         setImagen(event.target.value);
     }
-
+    const cambiarCaracteristicas = (event) => {
+        setCaracteristicas(event.target.value);
+    }
     const cambiarDisp = (event) => {
         setDisp(event.target.checked);
     }
 
+    useEffect(() => {
+        cargarListaCategorias();
+        cargarProducto();
+    }, [])
 
     return (
         <form className="container">
@@ -78,6 +121,10 @@ const FormProducto = () => {
                 <div className="mb-3 col-4">
                     <label htmlFor="nombre" className="form-control-sm">Ingrese nombre</label>
                     <input type="text" className="form-control form-control-sm col-md-3" onChange={cambiarNombre} value={nombre} id="nombre" name="nombre" />
+                </div>
+                <div className="mb-3 col-4">
+                    <label htmlFor="nombre" className="form-control-sm">Ingrese caracteristicas</label>
+                    <input type="text" className="form-control form-control-sm col-md-3" onChange={cambiarCaracteristicas} value={caracteristicas} id="caracteristicas" name="caracteristicas" />
                 </div>
                 <div className="mb-3 col-4">
                     <label htmlFor="marca" className="form-control-sm">Ingrese marca</label>
