@@ -1,21 +1,23 @@
 import axios from "axios";
-//const URI = "https://kecco-tienda-api.herokuapp.com/";
+import Config from "../Config";
+const BASE = Config.API_URL+"/api/productos";
+
 const ProductoServicios = {};
 
 ProductoServicios.listarProductos = () => {
-    return axios.get("http://localhost:8000/api/productos");
-}
-
-ProductoServicios.cargarProducto = (id) => {
-    return axios.get("http://localhost:8000/api/productos/"+id);
-}
-
-ProductoServicios.modificarProducto = (id, body) => {
-    return axios.put("http://localhost:8000/api/productos/"+id, body);
+    return axios.get(BASE);
 }
 
 ProductoServicios.guardarProducto = (producto) => {
-    return axios.post("http://localhost:8000/api/productos", producto);
+    return axios.post(BASE, producto);
+}
+
+ProductoServicios.cargarProducto = (id) => {
+    return axios.get(BASE+"/"+id);
+}
+
+ProductoServicios.modificarProducto = (id, body) => {
+    return axios.put(BASE+"/"+id, body);
 }
 
 export default ProductoServicios;
